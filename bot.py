@@ -16,10 +16,10 @@ bot = commands.Bot(command_prefix=".", intents=intents)
 
 @bot.tree.command(name="get_user",
                   description="Get a user from Osu !",)
-async def slash_command(interaction: discord.Interaction, username: str):
+async def user(interaction: discord.Interaction, username: str):
     user_info, best_beatmpap, beatmap_info = osuApi.get_user(username)
     if user_info == "User not found":
-        await interaction.response.send_message("User not found")
+        await interaction.response.send_message(f"User {username} not found")
     else:
         embed = discord.Embed()
         embed.set_author(name=f"{user_info['username']}", icon_url=f"https://a.ppy.sh/{user_info['user_id']}")
@@ -38,6 +38,12 @@ async def slash_command(interaction: discord.Interaction, username: str):
         embed.add_field(name="Rank", value=f"{best_beatmpap['rank']}", inline=True)
         embed.add_field(name="Date", value=f"{best_beatmpap['date']}", inline=False)
         await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+@bot.tree.command(name="compare",
+                  description="Compare two users from Osu !")
+async def compare(interaction: discord.Interaction, username1: str, username2: str):
+    await interaction.response.send_message("This command is not implemented yet")
 
 
 @bot.event
