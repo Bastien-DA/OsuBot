@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix=".", intents=intents)
 @bot.tree.command(name="get_user",
                   description="Get a user from Osu !",)
 async def slash_command(interaction: discord.Interaction, username: str):
-    user_info, best_beatmpap = osuApi.get_user(username)
+    user_info, best_beatmpap, beatmap_info = osuApi.get_user(username)
     if user_info == "User not found":
         await interaction.response.send_message("User not found")
     else:
@@ -28,8 +28,16 @@ async def slash_command(interaction: discord.Interaction, username: str):
                                            f" and country rank: {user_info['pp_country_rank']}"
                                            f" {user_info['country']}", inline=False)
         embed.add_field(name="Accuracy", value=f"{user_info['accuracy']} %", inline=False)
-        embed.add_field(name="best map", value=f"[meilleure map](https://osu.ppy.sh/beatmaps/{best_beatmpap["beatmap_id"]})", inline=False)
-        await interaction.response.send_message(embed=embed)
+        embed.add_field(name="Best Map", value=f"[{beatmap_info["title"]}]"
+                                               f"(https://osu.ppy.sh/beatmaps/{best_beatmpap["beatmap_id"]}) "
+                                               f"{beatmap_info["artist"]}", inline=False)
+        embed.add_field(name="Score", value=f"{best_beatmpap['score']}", inline=True)
+        embed.add_field(name="Combo", value=f"{best_beatmpap['maxcombo']}/{beatmap_info['max_combo']}", inline=True)
+        embed.add_field(name="\u200b", value="\u200b", inline=True)
+        embed.add_field(name="PP", value=f"{round(float(best_beatmpap['pp']), 2)} pp", inline=True)
+        embed.add_field(name="Rank", value=f"{best_beatmpap['rank']}", inline=True)
+        embed.add_field(name="Date", value=f"{best_beatmpap['date']}", inline=False)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 @bot.event
