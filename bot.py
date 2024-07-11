@@ -3,6 +3,8 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import os
 
+import osuApi
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -12,12 +14,22 @@ intents.message_content = True
 bot = commands.Bot(command_prefix=".", intents=intents)
 
 
-@bot.tree.command(name="test",
-                  description="its a test command",)
-async def slash_command(interaction: discord.Interaction):
-    embed = discord.Embed(title="Test Command")
-    embed.add_field(name="bastou", value="je teste les slash commands")
-    await interaction.response.send_message(embed=embed)
+@bot.tree.command(name="get_user",
+                  description="Get a user from Osu !",)
+async def slash_command(interaction: discord.Interaction, username: str):
+    user_info, best_beatmpap = osuApi.get_user(username)
+    if user_info == "User not found":
+        await interaction.response.send_message("User not found")
+    else:
+        embed = discord.Embed()
+        embed.set_author(name=f"{user_info['username']}", icon_url=f"https://a.ppy.sh/{user_info['user_id']}")
+        embed.add_field(name="Join Date", value=f"{user_info['join_date']}", inline=False)
+        embed.add_field(name="Rank", value=f"pp rank: {user_info['pp_rank']}"
+                                           f" and country rank: {user_info['pp_country_rank']}"
+                                           f" {user_info['country']}", inline=False)
+        embed.add_field(name="Accuracy", value=f"{user_info['accuracy']} %", inline=False)
+        embed.add_field(name="best map", value=f"[meilleure map](https://osu.ppy.sh/beatmaps/{best_beatmpap["beatmap_id"]})", inline=False)
+        await interaction.response.send_message(embed=embed)
 
 
 @bot.event
