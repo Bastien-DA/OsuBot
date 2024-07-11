@@ -15,5 +15,4 @@ def get_user(username: str):
     user_info = get_user_response.json()
     get_best = get_best_response.json()
     get_beatmap = get_beatmap_response.json()
-    user_info[0]['accuracy'] = user_info[0]['accuracy'][:5]
     return user_info[0], get_best[0], get_beatmap[0]

@@ -22,12 +22,13 @@ async def user(interaction: discord.Interaction, username: str):
         await interaction.response.send_message(f"User {username} not found")
     else:
         embed = discord.Embed()
-        embed.set_author(name=f"{user_info['username']}", icon_url=f"https://a.ppy.sh/{user_info['user_id']}")
+        embed.set_author(name=f"{user_info['username']}")
+        embed.set_thumbnail(url=f"https://a.ppy.sh/{user_info['user_id']}")
         embed.add_field(name="Join Date", value=f"{user_info['join_date']}", inline=False)
-        embed.add_field(name="Rank", value=f"pp rank: {user_info['pp_rank']}"
-                                           f" and country rank: {user_info['pp_country_rank']}"
-                                           f" {user_info['country']}", inline=False)
-        embed.add_field(name="Accuracy", value=f"{user_info['accuracy']} %", inline=False)
+        embed.add_field(name="Mondial Rank", value=f"{user_info['pp_rank']}")
+        embed.add_field(name="Country Rank", value=f"{user_info['pp_country_rank']} {user_info["country"]}")
+        embed.add_field(name="\u200b", value="\u200b", inline=True)
+        embed.add_field(name="Accuracy", value=f"{round(float(user_info['accuracy']), 2)} %", inline=False)
         embed.add_field(name="Best Map", value=f"[{beatmap_info["title"]}]"
                                                f"(https://osu.ppy.sh/beatmaps/{best_beatmpap["beatmap_id"]}) "
                                                f"{beatmap_info["artist"]}", inline=False)
