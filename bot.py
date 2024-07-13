@@ -28,6 +28,9 @@ async def user(interaction: discord.Interaction, username: str):
         embed.add_field(name="Mondial Rank", value=f"{user_info['pp_rank']}")
         embed.add_field(name="Country Rank", value=f"{user_info['pp_country_rank']} {user_info["country"]}")
         embed.add_field(name="\u200b", value="\u200b", inline=True)
+        embed.add_field(name="SS", value=f"{user_info['count_rank_ss']}", inline=True)
+        embed.add_field(name="S", value=f"{user_info['count_rank_s']}", inline=True)
+        embed.add_field(name="A", value=f"{user_info['count_rank_a']}", inline=True)
         embed.add_field(name="Accuracy", value=f"{round(float(user_info['accuracy']), 2)} %", inline=False)
         embed.add_field(name="Best Map", value=f"[{beatmap_info["title"]}]"
                                                f"(https://osu.ppy.sh/beatmaps/{best_beatmpap["beatmap_id"]}) "
