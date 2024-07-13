@@ -24,6 +24,7 @@ async def user(interaction: discord.Interaction, username: str):
         embed = discord.Embed()
         embed.set_author(name=f"{user_info['username']}")
         embed.set_thumbnail(url=f"https://a.ppy.sh/{user_info['user_id']}")
+        embed.add_field(name="Level", value=f"{round(float(user_info['level']), 1)}", inline=True)
         embed.add_field(name="Join Date", value=f"{user_info['join_date']}", inline=False)
         embed.add_field(name="Mondial Rank", value=f"{user_info['pp_rank']}")
         embed.add_field(name="Country Rank", value=f"{user_info['pp_country_rank']} {user_info["country"]}")
@@ -47,7 +48,28 @@ async def user(interaction: discord.Interaction, username: str):
 @bot.tree.command(name="compare",
                   description="Compare two users from Osu !")
 async def compare(interaction: discord.Interaction, username1: str, username2: str):
-    await interaction.response.send_message("This command is not implemented yet")
+    user_info1, user_info2, compare_info = osuApi.compare(username1, username2)
+    embed = discord.Embed()
+    embed.set_author(name=f"{user_info1['username']} vs {user_info2['username']}")
+    embed.add_field(name=f"Level {user_info1['username']}", value=f"{round(float(user_info1['level']), 1)}", inline=True)
+    embed.add_field(name=f"{compare_info['better_level']} Better", value=f"{round(float(compare_info['level']), 1)}", inline=True)
+    embed.add_field(name=f"Level {user_info2['username']}", value=f"{round(float(user_info2['level']), 1)}", inline=True)
+    embed.add_field(name=f"Mondial Rank {user_info1['username']}", value=f"{user_info1['pp_rank']}", inline=True)
+    embed.add_field(name=f"{compare_info['better_pp_rank']} Better", value=f"{compare_info['pp_rank']}", inline=True)
+    embed.add_field(name=f"Mondial Rank {user_info2['username']}", value=f"{user_info2['pp_rank']}", inline=True)
+    embed.add_field(name=f"Country Rank {user_info1['username']}", value=f"{user_info1['pp_country_rank']} {user_info1['country']}", inline=True)
+    embed.add_field(name=f"{compare_info['better_pp_country_rank']} Better", value=f"{compare_info['pp_country_rank']}", inline=True)
+    embed.add_field(name=f"Country Rank {user_info2['username']}", value=f"{user_info2['pp_country_rank']} {user_info2['country']}", inline=True)
+    embed.add_field(name=f"SS {user_info1['username']}", value=f"{user_info1['count_rank_ss']}", inline=True)
+    embed.add_field(name=f"{compare_info['better_count_rank_ss']} Better", value=f"{compare_info['count_rank_ss']}", inline=True)
+    embed.add_field(name=f"SS {user_info2['username']}", value=f"{user_info2['count_rank_ss']}", inline=True)
+    embed.add_field(name=f"S {user_info1['username']}", value=f"{user_info1['count_rank_s']}", inline=True)
+    embed.add_field(name=f"{compare_info['better_count_rank_s']} Better", value=f"{compare_info['count_rank_s']}", inline=True)
+    embed.add_field(name=f"S {user_info2['username']}", value=f"{user_info2['count_rank_s']}", inline=True)
+    embed.add_field(name=f"A {user_info1['username']}", value=f"{user_info1['count_rank_a']}", inline=True)
+    embed.add_field(name=f"{compare_info['better_count_rank_a']} Better", value=f"{compare_info['count_rank_a']}", inline=True)
+    embed.add_field(name=f"A {user_info2['username']}", value=f"{user_info2['count_rank_a']}", inline=True)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 @bot.event
